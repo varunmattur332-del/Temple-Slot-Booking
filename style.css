@@ -416,3 +416,52 @@ tr:hover {
         text-align: center;
     }
 }
+
+/* --- Blackout Banner (12 AM - 6 AM) --- */
+.blackout-banner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 30px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    margin: 40px auto;
+    max-width: 500px;
+}
+
+.blackout-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    animation: floatIcon 3s ease-in-out infinite alternate;
+}
+
+@keyframes floatIcon {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-10px);
+    }
+}
+
+.blackout-banner h2 {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.blackout-banner p {
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.blackout-banner strong {
+    color: var(--text-light);
+}

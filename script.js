@@ -1,9 +1,7 @@
 // Initialize Supabase Client
-// ⚠️ REPLACE WITH YOUR ACTUAL SUPABASE URL AND KEY ⚠️
 const SUPABASE_URL = 'https://vqfvjmneqiqpmigxafvz.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_t6z4napC6vTcO71enz0o_Q_AcVtolAl';
 
-// Use a fallback to prevent crashing if keys aren't set yet
 const supabaseClient = (typeof supabase !== 'undefined')
     ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
     : null;
@@ -18,8 +16,7 @@ const modalTitle = document.getElementById('modal-title');
 const toast = document.getElementById('toast');
 const dateDisplay = document.getElementById('current-date');
 
-// Current Date for reset logic
-const today = new Date().toISOString().split('T')[0];
+// Display current date
 dateDisplay.textContent = new Date().toLocaleDateString('en-US', {
     weekday: 'long',
     year: 'numeric',
@@ -31,12 +28,63 @@ dateDisplay.textContent = new Date().toLocaleDateString('en-US', {
 const totalSections = 5;
 const slotsPerSection = 5;
 
+// -------------------------------------------------------
+// Time Utility
+// -------------------------------------------------------
+function getCurrentHour() {
+    return new Date().getHours(); // 0 = midnight, 6 = 6 AM
+}
+
+function getToday() {
+    return new Date().toISOString().split('T')[0];
+}
+
+// Returns true if current time is between 12 AM (0:00) and 6 AM (6:00)
+function isBlackoutTime() {
+    const hour = getCurrentHour();
+    return hour >= 0 && hour < 6;
+}
+
+// -------------------------------------------------------
 // Initialize App
+// -------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
     checkConfiguration();
-    generateSlots();
-    fetchBookedSlots();
+
+    if (isBlackoutTime()) {
+        showBlackoutBanner();
+    } else {
+        generateSlots();
+        fetchBookedSlots();
+        scheduleNextDayCheck();
+    }
 });
+
+// Show a full-page banner during blackout hours (12 AM – 6 AM)
+function showBlackoutBanner() {
+    const container = document.getElementById('slots-container');
+    container.innerHTML = `
+        <div class="blackout-banner">
+            <div class="blackout-icon">🌙</div>
+            <h2>Booking Closed</h2>
+            <p>Slot booking is not available between <strong>12:00 AM</strong> and <strong>6:00 AM</strong>.</p>
+            <p>Bookings open every morning at <strong>6:00 AM</strong>. Please come back soon!</p>
+        </div>
+    `;
+}
+
+// Schedule a check at 6 AM to auto-refresh the page and open bookings
+function scheduleNextDayCheck() {
+    const now = new Date();
+    const msUntilMidnight = new Date(
+        now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0
+    ) - now;
+
+    // At midnight: reload the page to trigger blackout banner
+    setTimeout(() => {
+        location.reload();
+    }, msUntilMidnight);
+}
 
 function checkConfiguration() {
     if (SUPABASE_URL === 'YOUR_SUPABASE_URL_HERE' || !supabaseClient) {
@@ -45,7 +93,9 @@ function checkConfiguration() {
     }
 }
 
+// -------------------------------------------------------
 // 1. Generate Slots UI
+// -------------------------------------------------------
 function generateSlots() {
     for (let i = 1; i <= totalSections; i++) {
         const sectionEl = document.getElementById(`section-${i}`);
@@ -63,9 +113,13 @@ function generateSlots() {
     }
 }
 
-// 2. Fetch Booked Slots from Supabase
+// -------------------------------------------------------
+// 2. Fetch Booked Slots from Supabase (today only)
+// -------------------------------------------------------
 async function fetchBookedSlots() {
     if (!supabaseClient) return;
+
+    const today = getToday();
 
     try {
         const { data, error } = await supabaseClient
@@ -75,13 +129,12 @@ async function fetchBookedSlots() {
 
         if (error) throw error;
 
-        // Mark booked slots as disabled
         data.forEach(booking => {
             const btn = document.getElementById(booking.slot_id);
             if (btn) {
                 btn.classList.add('disabled');
                 btn.disabled = true;
-                btn.onclick = null; // Remove click handler
+                btn.onclick = null;
             }
         });
 
@@ -90,8 +143,14 @@ async function fetchBookedSlots() {
     }
 }
 
+// -------------------------------------------------------
 // 3. Open Booking Modal
+// -------------------------------------------------------
 function openBookingModal(slotId) {
+    if (isBlackoutTime()) {
+        showToast('Bookings are closed between 12 AM and 6 AM.', true);
+        return;
+    }
     if (!supabaseClient) {
         alert('Please configure Supabase details in script.js first!');
         return;
@@ -101,16 +160,24 @@ function openBookingModal(slotId) {
     modal.classList.remove('hidden');
 }
 
-// Helper to format slot name friendly
+// Helper to format slot name
 function formatSlotName(id) {
     const parts = id.split('-');
     return `Section ${parts[1]} - Slot ${parts[3]}`;
 }
 
+// -------------------------------------------------------
 // 4. Handle Form Submission
+// -------------------------------------------------------
 bookingForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    if (isBlackoutTime()) {
+        showToast('Bookings are closed between 12 AM and 6 AM.', true);
+        return;
+    }
+
+    const today = getToday();
     const slotId = slotIdInput.value;
     const fullName = document.getElementById('fullname').value;
     const place = document.getElementById('place').value;
@@ -135,17 +202,15 @@ bookingForm.addEventListener('submit', async (e) => {
             .insert([bookingData]);
 
         if (error) {
-            if (error.code === '23505') { // Unique constraint violation code
+            if (error.code === '23505') {
                 alert('Sorry! This slot was just booked by someone else.');
-                fetchBookedSlots(); // Refresh UI
+                fetchBookedSlots();
             } else {
                 throw error;
             }
         } else {
-            // Success
             showToast(`Booking Confirmed for ${fullName}!`);
 
-            // Update UI immediately without refresh
             const btn = document.getElementById(slotId);
             if (btn) {
                 btn.classList.add('disabled');
@@ -165,7 +230,9 @@ bookingForm.addEventListener('submit', async (e) => {
     }
 });
 
+// -------------------------------------------------------
 // Modal Logic
+// -------------------------------------------------------
 closeModal.addEventListener('click', closeModalAndReset);
 window.onclick = (event) => {
     if (event.target == modal) {
@@ -178,7 +245,9 @@ function closeModalAndReset() {
     bookingForm.reset();
 }
 
+// -------------------------------------------------------
 // Toast Notification
+// -------------------------------------------------------
 function showToast(message, isError = false) {
     toast.textContent = message;
     toast.style.backgroundColor = isError ? '#e74c3c' : '#2ecc71';
