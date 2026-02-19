@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Temple Slot Booking</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Supabase JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+    <div class="background-globes">
+        <div class="globe globe-1"></div>
+        <div class="globe globe-2"></div>
+    </div>
+
+    <div class="admin-container">
+        <!-- Login Form -->
+        <div id="login-section" class="login-card">
+            <h2>Admin Login</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" required placeholder="Enter username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required placeholder="Enter password">
+                </div>
+                <button type="submit" class="submit-btn" style="margin-top: 10px;">Login</button>
+                <div id="login-error" style="color: #e74c3c; margin-top: 15px; font-size: 0.9rem; display: none;">
+                    Invalid credentials!
+                </div>
+            </form>
+            <div style="margin-top: 20px;">
+                <a href="index.html" style="color: var(--text-muted); font-size: 0.8rem; text-decoration: none;">&larr;
+                    Back to Booking</a>
+            </div>
+        </div>
+
+        <!-- Dashboard Section (Hidden initially) -->
+        <div id="dashboard-section" style="display: none;">
+            <div class="dashboard-header">
+                <div>
+                    <h1
+                        style="background: linear-gradient(to right, #ff9933, #ff5e62); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
+                        Admin Dashboard</h1>
+                    <p style="color: var(--text-muted);">Manage temple darshan bookings</p>
+                </div>
+                <button id="logout-btn" class="logout-btn">Logout</button>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Slot</th>
+                            <th>Full Name</th>
+                            <th>Place</th>
+                            <th>Mobile</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bookings-table-body">
+                        <!-- Rows will be injected via JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="no-bookings" style="text-align: center; padding: 40px; color: var(--text-muted); display: none;">
+                No bookings found for the upcoming dates.
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast hidden">Action Successful!</div>
+
+    <script src="admin.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temple Slot Booking</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Supabase JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+    <div class="background-globes">
+        <div class="globe globe-1"></div>
+        <div class="globe globe-2"></div>
+    </div>
+
+    <header>
+        <h1>Temple Darshan Booking</h1>
+        <p id="current-date">Fetching date...</p>
+    </header>
+
+    <main class="container">
+        <!-- Sections will be generated here -->
+        <div id="slots-container">
+            <!-- Section 1 -->
+            <div class="section">
+                <h2>12:00 PM - 01:00 PM</h2>
+                <div class="slots-grid" id="section-1">
+                    <!-- Slots 1-5 will be injected via JS -->
+                </div>
+            </div>
+            <!-- Section 2 -->
+            <div class="section">
+                <h2>01:00 PM - 02:00 PM</h2>
+                <div class="slots-grid" id="section-2"></div>
+            </div>
+            <!-- Section 3 -->
+            <div class="section">
+                <h2>02:00 PM - 03:00 PM</h2>
+                <div class="slots-grid" id="section-3"></div>
+            </div>
+            <!-- Section 4 -->
+            <div class="section">
+                <h2>03:00 PM - 04:00 PM</h2>
+                <div class="slots-grid" id="section-4"></div>
+            </div>
+            <!-- Section 5 -->
+            <div class="section">
+                <h2>04:00 PM - 05:00 PM</h2>
+                <div class="slots-grid" id="section-5"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Booking Modal -->
+    <div id="booking-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3 id="modal-title">Book Slot</h3>
+            <form id="booking-form">
+                <input type="hidden" id="slot-id-input">
+                <div class="form-group">
+                    <label for="fullname">Full Name</label>
+                    <input type="text" id="fullname" required placeholder="Enter devotee name">
+                </div>
+                <div class="form-group">
+                    <label for="place">Place</label>
+                    <input type="text" id="place" required placeholder="City/Village">
+                </div>
+                <div class="form-group">
+                    <label for="mobile">Mobile Number</label>
+                    <input type="tel" id="mobile" required placeholder="10-digit mobile number" pattern="[0-9]{10}">
+                </div>
+                <button type="submit" class="submit-btn">Confirm Booking</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast hidden">Booking Confirmed!</div>
+
+    <div class="admin-link-container">
+        <a href="admin.html" class="admin-link">Admin Login</a>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
