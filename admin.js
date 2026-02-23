@@ -48,20 +48,32 @@ logoutBtn.addEventListener('click', () => {
 async function showDashboard() {
     loginSection.style.display = 'none';
     dashboardSection.style.display = 'block';
-    await fetchAllBookings();
+
+    // Show today's date in the dashboard subtitle
+    const dateSubtitle = document.getElementById('dashboard-subtitle');
+    if (dateSubtitle) {
+        const todayFormatted = new Date().toLocaleDateString('en-US', {
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+        });
+        dateSubtitle.textContent = `Today's Bookings — ${todayFormatted}`;
+    }
+
+    await fetchTodayBookings();
 }
 
-async function fetchAllBookings() {
+async function fetchTodayBookings() {
     if (!supabaseClient) {
         showToast('Database not connected!', true);
         return;
     }
 
+    const today = new Date().toISOString().split('T')[0];
+
     try {
         const { data, error } = await supabaseClient
             .from('bookings')
             .select('*')
-            .order('booking_date', { ascending: false })
+            .eq('booking_date', today)
             .order('slot_id', { ascending: true });
 
         if (error) throw error;
@@ -79,6 +91,7 @@ function renderBookings(bookings) {
 
     if (bookings.length === 0) {
         document.getElementById('no-bookings').style.display = 'block';
+        document.getElementById('no-bookings').textContent = 'No bookings yet for today.';
         return;
     }
 
@@ -86,11 +99,9 @@ function renderBookings(bookings) {
 
     bookings.forEach(booking => {
         const row = document.createElement('tr');
-        const date = new Date(booking.booking_date).toLocaleDateString();
         const slotName = formatSlotName(booking.slot_id);
 
         row.innerHTML = `
-            <td>${date}</td>
             <td style="font-weight: 600; color: var(--primary-color);">${slotName}</td>
             <td>${booking.full_name}</td>
             <td>${booking.place}</td>

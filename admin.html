@@ -52,7 +52,7 @@
                     <h1
                         style="background: linear-gradient(to right, #ff9933, #ff5e62); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">
                         Admin Dashboard</h1>
-                    <p style="color: var(--text-muted);">Manage temple darshan bookings</p>
+                    <p id="dashboard-subtitle" style="color: var(--text-muted);">Today's Bookings</p>
                 </div>
                 <button id="logout-btn" class="logout-btn">Logout</button>
             </div>
@@ -61,7 +61,6 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Date</th>
                             <th>Slot</th>
                             <th>Full Name</th>
                             <th>Place</th>
@@ -75,7 +74,7 @@
             </div>
 
             <div id="no-bookings" style="text-align: center; padding: 40px; color: var(--text-muted); display: none;">
-                No bookings found for the upcoming dates.
+                No bookings yet for today.
             </div>
         </div>
     </div>
