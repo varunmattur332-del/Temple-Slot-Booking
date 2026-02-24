@@ -188,7 +188,8 @@ bookingForm.addEventListener('submit', async (e) => {
         booking_date: today,
         full_name: fullName,
         place: place,
-        mobile: mobile
+        mobile: mobile,
+        payment_status: 'pending'
     };
 
     const submitBtn = bookingForm.querySelector('.submit-btn');
@@ -219,6 +220,9 @@ bookingForm.addEventListener('submit', async (e) => {
             }
 
             closeModalAndReset();
+
+            // Show payment modal
+            showPaymentModal(fullName, slotId, today);
         }
 
     } catch (err) {
@@ -256,4 +260,77 @@ function showToast(message, isError = false) {
     setTimeout(() => {
         toast.classList.add('hidden');
     }, 3000);
+}
+
+// -------------------------------------------------------
+// Payment Modal Logic
+// -------------------------------------------------------
+const paymentModal = document.getElementById('payment-modal');
+const closePaymentBtn = document.querySelector('.close-payment-btn');
+const skipPaymentBtn = document.getElementById('skip-payment-btn');
+const upiPayLink = document.getElementById('upi-pay-link');
+const iHavePaidBtn = document.getElementById('i-have-paid-btn');
+
+// Track current booking for payment update
+let currentPaymentSlotId = null;
+let currentPaymentDate = null;
+
+function showPaymentModal(fullName, slotId, bookingDate) {
+    currentPaymentSlotId = slotId;
+    currentPaymentDate = bookingDate;
+
+    // Build UPI link with booking details
+    const upiId = 'varun@oksbi';
+    const payeeName = 'Varun';
+    const amount = '500';
+    const txnNote = `Temple Darshan - ${formatSlotName(slotId)} - ${fullName}`;
+    const upiUrl = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(payeeName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(txnNote)}`;
+
+    upiPayLink.href = upiUrl;
+
+    // Hide "I Have Paid" initially
+    iHavePaidBtn.style.display = 'none';
+
+    paymentModal.classList.remove('hidden');
+}
+
+// When user clicks the UPI pay link, show "I Have Paid" button
+upiPayLink.addEventListener('click', () => {
+    setTimeout(() => {
+        iHavePaidBtn.style.display = 'block';
+    }, 1000); // Show after 1 second delay
+});
+
+// "I Have Paid" — update payment_status to 'paid' in Supabase
+iHavePaidBtn.addEventListener('click', async () => {
+    if (!supabaseClient || !currentPaymentSlotId) return;
+
+    try {
+        const { error } = await supabaseClient
+            .from('bookings')
+            .update({ payment_status: 'paid' })
+            .eq('slot_id', currentPaymentSlotId)
+            .eq('booking_date', currentPaymentDate);
+
+        if (error) throw error;
+
+        showToast('Payment marked as completed! 🙏');
+        closePaymentModal();
+    } catch (err) {
+        console.error('Payment update failed:', err);
+        showToast('Could not update payment. Please contact admin.', true);
+    }
+});
+
+function closePaymentModal() {
+    paymentModal.classList.add('hidden');
+    currentPaymentSlotId = null;
+    currentPaymentDate = null;
+}
+
+if (closePaymentBtn) {
+    closePaymentBtn.addEventListener('click', closePaymentModal);
+}
+if (skipPaymentBtn) {
+    skipPaymentBtn.addEventListener('click', closePaymentModal);
 }

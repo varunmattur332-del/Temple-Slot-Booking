@@ -100,12 +100,17 @@ function renderBookings(bookings) {
     bookings.forEach(booking => {
         const row = document.createElement('tr');
         const slotName = formatSlotName(booking.slot_id);
+        const paymentStatus = booking.payment_status || 'pending';
+        const isPaid = paymentStatus === 'paid';
+        const badgeColor = isPaid ? '#2ecc71' : '#e74c3c';
+        const badgeText = isPaid ? '✅ Paid' : '⏳ Pending';
 
         row.innerHTML = `
             <td style="font-weight: 600; color: var(--primary-color);">${slotName}</td>
             <td>${booking.full_name}</td>
             <td>${booking.place}</td>
             <td><a href="tel:${booking.mobile}" style="color: var(--text-light); text-decoration: none;">${booking.mobile}</a></td>
+            <td><span style="background: ${badgeColor}; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">${badgeText}</span></td>
         `;
         bookingsTableBody.appendChild(row);
     });

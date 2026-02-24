@@ -9,6 +9,7 @@ create table bookings (
   full_name text not null,
   place text not null,
   mobile text not null,
+  payment_status text default 'pending',
   
   -- Prevent double booking for the same slot on the same day
   unique(slot_id, booking_date)
@@ -24,3 +25,12 @@ create policy "Enable insert for everyone" on bookings for insert with check (tr
 
 -- 4. Create a policy to allow everyone to read bookings (to see what's booked)
 create policy "Enable read access for all users" on bookings for select using (true);
+
+-- 5. Create a policy to allow updates (for payment status)
+create policy "Enable update for everyone" on bookings for update using (true);
+
+-- ========================================
+-- IF YOUR TABLE ALREADY EXISTS, run this instead to add the payment column:
+-- ========================================
+-- ALTER TABLE bookings ADD COLUMN payment_status text DEFAULT 'pending';
+-- CREATE POLICY "Enable update for everyone" ON bookings FOR UPDATE USING (true);

@@ -215,7 +215,8 @@ header p {
     transform: scale(0.9);
 }
 
-.close-btn {
+.close-btn,
+.close-payment-btn {
     position: absolute;
     top: 1rem;
     right: 1.5rem;
@@ -228,6 +229,80 @@ header p {
     margin-bottom: 1.5rem;
     color: var(--text-light);
     text-align: center;
+}
+
+/* Payment Modal Buttons */
+.upi-pay-btn {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(to right, #5f27cd, #341f97);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.upi-pay-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(95, 39, 205, 0.4);
+}
+
+.i-have-paid-btn {
+    display: block;
+    width: 100%;
+    padding: 0.9rem;
+    margin-top: 12px;
+    background: linear-gradient(to right, #2ecc71, #27ae60);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.5s ease;
+}
+
+.i-have-paid-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(46, 204, 113, 0.4);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.skip-payment-btn {
+    display: block;
+    width: 100%;
+    padding: 0.7rem;
+    margin-top: 10px;
+    background: transparent;
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.skip-payment-btn:hover {
+    border-color: var(--text-light);
+    color: var(--text-light);
 }
 
 /* Form */
