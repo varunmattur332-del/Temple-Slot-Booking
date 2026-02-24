@@ -267,7 +267,6 @@ function showToast(message, isError = false) {
 // -------------------------------------------------------
 const paymentModal = document.getElementById('payment-modal');
 const closePaymentBtn = document.querySelector('.close-payment-btn');
-const skipPaymentBtn = document.getElementById('skip-payment-btn');
 const upiPayLink = document.getElementById('upi-pay-link');
 const iHavePaidBtn = document.getElementById('i-have-paid-btn');
 
@@ -280,9 +279,9 @@ function showPaymentModal(fullName, slotId, bookingDate) {
     currentPaymentDate = bookingDate;
 
     // Build UPI link with booking details
-    const upiId = 'varun@oksbi';
+    const upiId = '6363888279@axl';
     const payeeName = 'Varun';
-    const amount = '500';
+    const amount = '100';
     const txnNote = `Temple Darshan - ${formatSlotName(slotId)} - ${fullName}`;
     const upiUrl = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(payeeName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(txnNote)}`;
 
@@ -330,7 +329,4 @@ function closePaymentModal() {
 
 if (closePaymentBtn) {
     closePaymentBtn.addEventListener('click', closePaymentModal);
-}
-if (skipPaymentBtn) {
-    skipPaymentBtn.addEventListener('click', closePaymentModal);
 }
