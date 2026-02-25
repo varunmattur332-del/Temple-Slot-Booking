@@ -117,19 +117,17 @@ function renderBookings(bookings) {
 }
 
 function formatSlotName(id) {
-    const parts = id.split('-');
-    const sectionNum = parts[1];
-    const slotNum = parts[3];
+    const num = parseInt(id.split('-')[1]);
+    const sectionNum = Math.ceil(num / 5);
 
     const times = {
-        '1': '12pm-1pm',
-        '2': '1pm-2pm',
-        '3': '2pm-3pm',
-        '4': '3pm-4pm',
-        '5': '4pm-5pm'
+        1: '12pm-1pm',
+        2: '1pm-2pm',
+        3: '2pm-3pm',
+        4: '3pm-4pm'
     };
 
-    return `Sec ${sectionNum} (${times[sectionNum]}) - Slot ${slotNum}`;
+    return `Slot ${num} (${times[sectionNum]})`;
 }
 
 // Toast Notification

@@ -25,8 +25,9 @@ dateDisplay.textContent = new Date().toLocaleDateString('en-US', {
 });
 
 // App State
-const totalSections = 5;
+const totalSections = 4;
 const slotsPerSection = 5;
+const FAKE_BOOKED_SLOTS = [1, 2, 3, 4, 5]; // Always show as booked
 
 // -------------------------------------------------------
 // Time Utility
@@ -97,18 +98,28 @@ function checkConfiguration() {
 // 1. Generate Slots UI
 // -------------------------------------------------------
 function generateSlots() {
+    let slotNumber = 1;
     for (let i = 1; i <= totalSections; i++) {
         const sectionEl = document.getElementById(`section-${i}`);
         if (!sectionEl) continue;
 
         for (let j = 1; j <= slotsPerSection; j++) {
-            const slotId = `sec-${i}-slot-${j}`;
+            const slotId = `slot-${slotNumber}`;
             const btn = document.createElement('button');
             btn.className = 'slot-btn';
             btn.id = slotId;
-            btn.textContent = `Slot ${j}`;
-            btn.onclick = () => openBookingModal(slotId);
+            btn.textContent = `Slot ${slotNumber}`;
+
+            // Always disable slots 1-5 (fake booked)
+            if (FAKE_BOOKED_SLOTS.includes(slotNumber)) {
+                btn.classList.add('disabled');
+                btn.disabled = true;
+            } else {
+                btn.onclick = () => openBookingModal(slotId);
+            }
+
             sectionEl.appendChild(btn);
+            slotNumber++;
         }
     }
 }
@@ -162,8 +173,8 @@ function openBookingModal(slotId) {
 
 // Helper to format slot name
 function formatSlotName(id) {
-    const parts = id.split('-');
-    return `Section ${parts[1]} - Slot ${parts[3]}`;
+    const num = id.split('-')[1];
+    return `Slot ${num}`;
 }
 
 // -------------------------------------------------------
