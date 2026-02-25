@@ -282,7 +282,7 @@ function showPaymentModal(fullName, slotId, bookingDate) {
     const upiId = '6363888279@axl';
     const payeeName = 'Varun';
     const amount = '100';
-    const txnNote = `Temple Darshan - ${formatSlotName(slotId)} - ${fullName}`;
+    const txnNote = `🛕 Temple Darshan - ${fullName} - ${formatSlotName(slotId)}`;
     const upiUrl = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(payeeName)}&am=${amount}&cu=INR&tn=${encodeURIComponent(txnNote)}`;
 
     upiPayLink.href = upiUrl;
