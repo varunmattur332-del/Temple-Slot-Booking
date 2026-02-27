@@ -221,7 +221,7 @@ bookingForm.addEventListener('submit', async (e) => {
                 throw error;
             }
         } else {
-            showToast(`Booking Confirmed for ${fullName}!`);
+            // showToast(`Booking Confirmed for ${fullName}!`);
 
             const btn = document.getElementById(slotId);
             if (btn) {

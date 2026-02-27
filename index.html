@@ -62,15 +62,15 @@
             <form id="booking-form">
                 <input type="hidden" id="slot-id-input">
                 <div class="form-group">
-                    <label for="fullname">Full Name</label>
+                    <label for="fullname">Full Name/ಹೆಸರು</label>
                     <input type="text" id="fullname" required placeholder="Enter devotee name">
                 </div>
                 <div class="form-group">
-                    <label for="place">Place</label>
+                    <label for="place">Place/ಸ್ಥಳ </label>
                     <input type="text" id="place" required placeholder="City/Village">
                 </div>
                 <div class="form-group">
-                    <label for="mobile">Mobile Number</label>
+                    <label for="mobile">Mobile Number/ಮೊಬೈಲ್ ಸಂಖ್ಯೆ </label>
                     <input type="tel" id="mobile" required placeholder="10-digit mobile number" pattern="[0-9]{10}">
                 </div>
                 <button type="submit" class="submit-btn">Confirm Booking</button>
@@ -85,7 +85,7 @@
     <div id="payment-modal" class="modal hidden">
         <div class="modal-content">
             <span class="close-payment-btn">&times;</span>
-            <h3>✅ Booking Confirmed!</h3>
+            <!-- <h3>✅ Booking Confirmed!</h3> -->
             <p style="color: var(--text-muted); margin-bottom: 20px; text-align: center;">Complete your payment of
                 <strong style="color: var(--primary-color);">₹100</strong> via UPI
             </p>
@@ -94,6 +94,8 @@
             </a>
             <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 15px; text-align: center;">Payment will
                 open in PhonePe / Google Pay / Paytm</p>
+            <img src="images/Scanner.jpg" alt="UPI QR Code"
+                style="display: block; margin: 15px auto 0; width: 150px; height: 150px; object-fit: contain; border-radius: 10px;">
             <button id="i-have-paid-btn" class="i-have-paid-btn" style="display: none;">✅ I Have Paid</button>
 
         </div>
